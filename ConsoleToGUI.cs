@@ -2,9 +2,22 @@ using UnityEngine;
 
 public class ConsoleToGUI : MonoBehaviour
 {
+    [Header("Text area properties")]
+    [SerializeField] [Range(0, 1920)] int textAreaXPosition = 10;
+    [SerializeField] [Range(0, 1080)] int textAreaYPosition = 370;
+    [SerializeField] [Range(0, 1920)] int textAreaWidth = 370;
+    [SerializeField] [Range(0, 1080)] int textAreaHeight = 370;
+
+    [Header("Button properties")]
+    [SerializeField] [Range(0, 1920)] int buttonXPosition = 10;
+    [SerializeField] [Range(0, 1080)] int buttonYPosition = 370;
+    [SerializeField] [Range(0, 1920)] int buttonWidth = 370;
+    [SerializeField] [Range(0, 1080)] int buttonHeight = 370;
+
     string myLog = "*begin log";
     bool doShow;
     int kChars = 700;
+    
     void OnEnable() { Application.logMessageReceived += Log; }
     void OnDisable() { Application.logMessageReceived -= Log; }
     void Update() { if (Input.GetKeyDown("`")) { doShow = !doShow; } }
@@ -17,8 +30,12 @@ public class ConsoleToGUI : MonoBehaviour
     void OnGUI()
     {
         if (!doShow) { return; }
-        GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity,
-           new Vector3(Screen.width / 1200.0f, Screen.height / 800.0f, 1.0f));
-        GUI.TextArea(new Rect(10, 10, 540, 370), myLog);
+        
+        GUI.TextArea(new Rect(textAreaXPosition, Screen.height - textAreaYPosition, textAreaWidth, textAreaHeight), myLog);
+
+        if (GUI.Button(new Rect(buttonXPosition, Screen.height - buttonYPosition, buttonWidth, buttonHeight), "Clear"))
+        {
+            myLog = string.Empty;
+        }
     }
 }
