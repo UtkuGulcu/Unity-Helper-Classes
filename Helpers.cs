@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 
 public static class Helpers
 {
-
     // Allows you to get Non-allocating WaitForSeconds
     private static readonly Dictionary<float, WaitForSeconds> WaitDictionary = new Dictionary<float, WaitForSeconds>();
     public static WaitForSeconds GetWait(float time)
@@ -27,7 +26,7 @@ public static class Helpers
         return _results.Count > 0;
     }
 
-    //Gets the word point of Canvas element
+    //Gets the word position of Canvas element
     public static Vector2 GetWorldPositionOfCanvasElement(RectTransform element)
     {
         RectTransformUtility.ScreenPointToWorldPointInRectangle(element, element.position, Camera.main, out var result);
@@ -37,8 +36,21 @@ public static class Helpers
     //Gets the world position of mouse
     public static Vector3 GetMouseWorldPosition()
     {
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        worldPosition.z = 0;
-        return worldPosition;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 999f))
+        {
+            return hit.point;
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    public static bool IsMouseOnGameWorld()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        return (Physics.Raycast(ray, out RaycastHit hit, 999f));
     }
 }
